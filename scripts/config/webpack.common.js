@@ -73,6 +73,9 @@ module.exports = {
       name: "build",
       color: "#fa8c16",
     }),
+    new webpack.DefinePlugin({
+      'isDev': isDev
+    }),
     !isDev &&
       // * css 样式拆分，抽离公共代码。
       new MiniCssExtractPlugin({

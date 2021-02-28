@@ -111,7 +111,7 @@ module.exports = {
     'jsx-quotes': [ERROR, 'prefer-single'],
     'lines-between-class-members': [ERROR, 'always'],
     'linebreak-style': [OFF, 'windows'],
-    'no-unused-expressions': WARN,
+    'no-unused-expressions': OFF,
     'no-plusplus': OFF,
     'no-console': OFF,
     'no-shadow': OFF,
@@ -119,6 +119,9 @@ module.exports = {
     semi: [ERROR, 'always'],
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': ['error'],
-    'react/prefer-stateless-function': OFF
+    'react/prefer-stateless-function': OFF,
+    'jsx-a11y/anchor-is-valid': OFF,
+    'jsx-a11y/no-static-element-interactions': OFF,
+    'unicorn/consistent-function-scoping': OFF
   }
 };
