@@ -1,6 +1,6 @@
 const htmlConfig = {
   build: {
-    title: "正式环境",
+    title: "抢购助手",
   },
   dev: {
     title: "开发环境",

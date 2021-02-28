@@ -5,7 +5,7 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "jsx": "react",
-    "isolatedModules": true,
+    "isolatedModules": false,
     "strict": true,
     "downlevelIteration": true,
 

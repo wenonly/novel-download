@@ -10,12 +10,14 @@ const WebpackBar = require("webpackbar");
 
 module.exports = {
   entry: {
-    app: path.resolve(ROOTPATH, "src/index.tsx"),
+    popup: path.resolve(ROOTPATH, "src/popup/index.tsx"),
+    options: path.resolve(ROOTPATH, "src/options/index.tsx"),
+    background: path.resolve(ROOTPATH, "src/background/index.ts"),
+    inject: path.resolve(ROOTPATH, "src/inject/index.ts"),
   },
   output: {
     filename: "js/[name].js",
     path: path.resolve(ROOTPATH, "dist"),
-    publicPath: "",
   },
   resolve: {
     // * 配置后引入模块时，不需要加入后缀。
@@ -41,14 +43,17 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: path.resolve(ROOTPATH, "public/index.html"),
-      filename: "index.html",
-      minify: {
-        removeAttributeQuotes: false, //是否删除属性的双引号
-        collapseWhitespace: false, //是否折叠空白
-      },
-      config: htmlConfig[isDev ? "dev" : "build"],
+    ...["popup", "options"].map((name) => {
+      return new HtmlWebpackPlugin({
+        template: path.resolve(ROOTPATH, "public/index.html"),
+        filename: `${name}.html`,
+        minify: {
+          removeAttributeQuotes: false, //是否删除属性的双引号
+          collapseWhitespace: false, //是否折叠空白
+        },
+        chunks: [name],
+        config: htmlConfig[isDev ? "dev" : "build"],
+      })
     }),
     new CopyWebpackPlugin({
       patterns: [
