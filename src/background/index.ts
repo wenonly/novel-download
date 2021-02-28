@@ -1,1 +1,1 @@
-console.log('background1');
+require('crx-hotreload');

@@ -82,8 +82,8 @@ module.exports = {
       }),
   ].filter(Boolean),
   // 不使用npm引入，直接通过cdn引入
-  externals: {
-    react: "React",
-    "react-dom": "ReactDOM",
-  },
+  // externals: {
+  //   react: "React",
+  //   "react-dom": "ReactDOM",
+  // },
 };
