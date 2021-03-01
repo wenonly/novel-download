@@ -29,6 +29,7 @@
   // 权限申请
   "permissions": [
     "contextMenus", // 右键菜单
+    "cookies",
     "tabs", // 标签
     "notifications", // 通知
     "webRequest", // web请求

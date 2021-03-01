@@ -122,6 +122,9 @@ module.exports = {
     'react/prefer-stateless-function': OFF,
     'jsx-a11y/anchor-is-valid': OFF,
     'jsx-a11y/no-static-element-interactions': OFF,
-    'unicorn/consistent-function-scoping': OFF
+    'unicorn/consistent-function-scoping': OFF,
+    'promise/catch-or-return': OFF,
+    'promise/always-return': OFF,
+    'no-restricted-syntax': OFF
   }
 };
