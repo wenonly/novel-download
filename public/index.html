@@ -5,6 +5,9 @@
     <link rel="shortcut icon" href="./icon.png" type="image/x-icon" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= (htmlWebpackPlugin.options.config.title) %></title>
+    <% for(var js of htmlWebpackPlugin.options.config.js) { %>
+        <script src="<%= js %>"></script>
+    <% } %>
   </head>
 
   <body>

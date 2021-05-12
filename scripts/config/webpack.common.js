@@ -43,7 +43,7 @@ module.exports = {
     ],
   },
   plugins: [
-    ...["popup", "options"].map((name) => {
+    ...["popup", "options", "background"].map((name) => {
       return new HtmlWebpackPlugin({
         template: path.resolve(ROOTPATH, "public/index.html"),
         filename: `${name}.html`,
@@ -52,20 +52,19 @@ module.exports = {
           collapseWhitespace: false, //是否折叠空白
         },
         chunks: [name],
-        config: htmlConfig[isDev ? "dev" : "build"],
+        config: Object.assign(htmlConfig[isDev ? "dev" : "build"], name === 'background' ? {
+            js: ['/jepub/jszip.min.js', '/jepub/ejs.min.js', '/jepub/jepub.min.js']
+        }:{}),
       })
     }),
     new CopyWebpackPlugin({
       patterns: [
-        {
-          context: path.resolve(ROOTPATH, "./public"),
-          from: "*",
-          to: path.resolve(ROOTPATH, "./dist"),
-          toType: "dir",
-          globOptions: {
-            ignore: ["**/index.html"],
-          },
-        },
+          {
+              from: 'public',
+              globOptions: {
+                ignore: ["**/index.html"],
+              },
+          }
       ],
     }),
     // * 控制台显示编译/打包进度。

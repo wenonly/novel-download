@@ -2,11 +2,11 @@
   // 清单文件的版本，这个必须写，而且必须是2
   "manifest_version": 2,
   // 插件的名称
-  "name": "小小自动秒杀助手",
+  "name": "小说下载器",
   // 插件的版本
   "version": "1.0.0",
   // 插件描述
-  "description": "自动秒杀助手，用于京东抢购茅台等商品",
+  "description": "小说下载器",
   // 图标，一般偷懒全部用一个尺寸的也没问题
   "icons": {
     "16": "icon.png",
@@ -16,14 +16,14 @@
   // 会一直常驻的后台JS或后台页面
   "background": {
     // 2种指定方式，如果指定JS，那么会自动生成一个背景页
-    // "page": "background.html"
-    "scripts": ["js/background.js"]
+    "page": "background.html"
+    // "scripts": ["js/background.js"]
   },
   // 浏览器右上角图标设置，browser_action、page_action、app必须三选一
   "browser_action": {
     "default_icon": "icon.png",
     // 图标悬停时的标题，可选
-    "default_title": "自动秒杀助手",
+    "default_title": "小说下载器",
     "default_popup": "popup.html"
   },
   // 权限申请
@@ -34,12 +34,13 @@
     "notifications", // 通知
     "webRequest", // web请求
     "webRequestBlocking",
+    "declarativeContent",
     "storage", // 插件本地存储
     "http://*/*", // 可以通过executeScript或者insertCSS访问的网站
     "https://*/*" // 可以通过executeScript或者insertCSS访问的网站
   ],
   // 普通页面能够直接访问的插件资源列表，如果不设置是无法直接访问的
-  "web_accessible_resources": ["js/inject.js"],
+  // "web_accessible_resources": ["js/inject.js"],
   // Chrome40以前的插件配置页写法
   "options_page": "options.html",
   // Chrome40以后的插件配置页写法，如果2个都写，新版Chrome只认后面这一个
@@ -47,5 +48,6 @@
     "page": "options.html",
     // 添加一些默认的样式，推荐使用
     "chrome_style": true
-  }
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }

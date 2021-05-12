@@ -16,12 +16,6 @@
   ],
   "author": "taowen",
   "license": "MIT",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "commitlint --config .commitlintrc.js -E HUSKY_GIT_PARAMS"
-    }
-  },
   "lint-staged": {
     "*.{ts,tsx,js}": [
       "eslint --config .eslintrc.js"
@@ -102,7 +96,10 @@
     "antd": "^4.11.2",
     "axios": "^0.21.1",
     "crx-hotreload": "^1.0.6",
+    "epub-press-js": "^0.5.3",
     "eslint-import-resolver-webpack": "^0.13.0",
+    "jepub": "^2.1.4",
+    "moment": "^2.29.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router": "^5.2.0",

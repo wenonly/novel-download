@@ -38,3 +38,33 @@ export function clearStorage() {
     });
   });
 }
+
+// 从完整url中获取hostname
+export function getHostName(url: string) {
+    const reg = url.match(/https?:\/\/(.*?)\//);
+    if (reg) {
+        return reg[1];
+    }
+    return '';
+}
+
+// 从完整url中获取main
+export function getProtocol(url: string) {
+    const reg = url.match(/(https?:)\/\/.*?\//);
+    if (reg) {
+        return reg[1];
+    }
+    return '';
+}
+
+export function getDomFromHtml(html: string) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    return doc;
+}
+
+export const sleep = (wait: number) => new Promise((resolve, reject) => {
+    setTimeout(() => {
+        resolve(true);
+    }, wait);
+});
