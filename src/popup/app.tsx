@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Result, Spin } from 'antd';
-import { Downloader } from '@/background/downloader';
-import request from '../request';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Result, Spin, Progress } from 'antd';
+import { Downloader, DownloadStatus, HanlerCallback } from '@/background/downloader';
 import WebList from './WebList';
 import rules, {Novel, Rule} from '../rules';
 import { getHostName } from '../utils';
@@ -9,10 +8,35 @@ import { getHostName } from '../utils';
 const bgWindow = chrome.extension.getBackgroundPage();
 const bgApp = (bgWindow as Window).app;
 
+enum PageStatus {
+    support = 'support',
+    notSupport = 'not support',
+    notCurrentPage = 'not correct page',
+}
+
+// 获取当前页面的状态
+const getPageStatus = (url: string) => {
+    const hostname = getHostName(url);
+    const rule = rules[hostname];
+    if (rule) {
+        if (rule.regExp.test(url)) {
+            return PageStatus.support;
+        } 
+            return PageStatus.notCurrentPage;
+        
+    }
+    return PageStatus.notSupport;
+};
+
 const Popup: React.FunctionComponent = () => {
-    const [status, setStatus] = useState<'support' | 'not support' | 'not correct page'>('not support');
-    const [info, setInfo] = useState<Novel>({});
+    const [mainUrl, setMainUrl] = useState('');
+    const [status, setStatus] = useState<PageStatus>(PageStatus.notSupport);
+    const [info, setInfo] = useState<Novel>({
+        chapters: []
+    });
     const [loading, setLoading] = useState(false);
+    const [downloaderStatus, setDownloaderStatus] = useState<DownloadStatus>(DownloadStatus.notStart);
+    const [percent, setPercent] = useState(0);
 
     // 获取小说数据
     const getInfo = (url?: string) => {
@@ -24,27 +48,39 @@ const Popup: React.FunctionComponent = () => {
         });
     };
 
-    // 获取当前页面的状态
-    const getPageStatus = (url: string) => {
-        const hostname = getHostName(url);
-        const rule = rules[hostname];
-        if (rule) {
-            if (rule.regExp.test(url)) {
-                return 'support';
-            } 
-                return 'not correct page';
-            
+    const startDownload = () => {
+        const downloader = bgApp.stack.push(mainUrl);
+        downloader.onChange((novel, status, chapterLen) => {
+            setDownloaderStatus(status);
+            setInfo(novel);
+            const per = Math.floor(chapterLen / info.chapters.length * 100);
+            setPercent(per);
+        });
+    };
+
+    const getDownloadStatus = (mainUrl: string) => {
+        const downloader = bgApp.stack.get(mainUrl);
+        if (downloader) {
+            setInfo(downloader.novel);
+            setDownloaderStatus(downloader.status);
+            const per = Math.floor(downloader.chapterLen / downloader.novel.chapters.length * 100);
+            setPercent(per);
+            return true;
         }
-        return 'not support';
+        return false;
     };
 
     useEffect(() => {
         chrome.tabs.query({active: true, lastFocusedWindow: true}, (tabs) => {
             if (tabs && tabs.length > 0) {
                 const tab = tabs[0];
+                setMainUrl(tab.url||'');
                 const pageStatus = getPageStatus(tab.url || '');
                 setStatus(pageStatus);
-                if (pageStatus === 'support') {
+                if (pageStatus === PageStatus.support) {
+                    if (getDownloadStatus(tab.url || '')) {
+                        return;
+                    }
                     getInfo(tab.url);
                 }
             }
@@ -54,7 +90,7 @@ const Popup: React.FunctionComponent = () => {
     return (
       <div>
         {
-              status === 'not support' && (
+              status === PageStatus.notSupport && (
               <Result
                 status='error'
                 title='当前网站不支持下载'
@@ -65,7 +101,7 @@ const Popup: React.FunctionComponent = () => {
               )
           }
         {
-              status === 'not correct page' && (
+              status === PageStatus.notCurrentPage && (
               <Result
                 status='warning'
                 title='不在小说主页'
@@ -74,7 +110,7 @@ const Popup: React.FunctionComponent = () => {
               )
         }
         {
-            status === 'support' && (
+            status === PageStatus.support && (
             <Spin spinning={loading}>
               <div className='info'>
                 <div className='info-wrap'>
@@ -90,8 +126,14 @@ const Popup: React.FunctionComponent = () => {
                 </div>
                 <p className='description'>{info.description}</p>
                 <div className='chapter-info'>
-                  <span>{info.chapters?.length} 章</span>
-                  <a>下载</a>
+                  <span>{info.chapters.length} 章</span>
+                  {
+                      downloaderStatus === DownloadStatus.notStart ? 
+                        <a onClick={startDownload}>下载</a>: (
+                        //   <Progress percent={percent} size='small' style={{width: '100px'}} />
+                          <span>{percent}</span>
+                      )
+                  }
                 </div>
               </div>
             </Spin>

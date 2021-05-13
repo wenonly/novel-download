@@ -8,7 +8,7 @@ export interface Novel {
     category?: string
     updateTime?: string
     description?: string
-    chapters?: Chapter[]
+    chapters: Chapter[]
 }
 
 export interface Chapter {

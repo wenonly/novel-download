@@ -1,6 +1,9 @@
-declare const isDev: boolean; // 是否为开发环境
-declare const jEpub: any;
+import { DownloaderStack } from '@/background/downloader';
 
-interface Window {
-  app: any;
+declare global {
+    interface Window {
+        app: {
+            stack: DownloaderStack
+        }
+    }
 }
