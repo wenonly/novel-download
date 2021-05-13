@@ -140,12 +140,12 @@ export class Downloader {
     link.click();
     this.setStatus(DownloadStatus.success);
 
-    chrome.notifications.create(this.mainUrl, {
-      type: 'basic',
-      iconUrl: this.novel.coverImgUrl,
-      title: this.novel.title,
-      message: '下载成功'
-    });
+    // chrome.notifications.create(this.mainUrl, {
+    //   type: 'basic',
+    // //   iconUrl: this.novel.coverImgUrl,
+    //   title: this.novel.title,
+    //   message: '下载成功'
+    // });
   }
 }
 

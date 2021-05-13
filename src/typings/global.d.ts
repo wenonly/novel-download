@@ -6,4 +6,7 @@ declare global {
             stack: DownloaderStack
         }
     }
+    interface Document {
+        adoptedStyleSheets: any
+    }
 }
