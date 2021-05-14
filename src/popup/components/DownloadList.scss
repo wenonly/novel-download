@@ -1,0 +1,26 @@
+.download-wrap {
+    height: 500px;
+    padding-right: 20px;
+    overflow-y: auto;
+}
+.item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    > span {
+        color: rgba(0,0,0,0.6);
+        font-weight: normal;
+    }
+}
+.desc-wrap {
+    > .desc {
+        display: -webkit-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+    > .status {
+        text-align: right;
+    }
+}

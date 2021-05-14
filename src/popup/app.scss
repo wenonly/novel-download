@@ -1,50 +1,10 @@
 @import '../assets/reset.scss';
-html,
-body,
+html {
+    height: auto !important;
+}
 #app {
-  width: 300px;
+  width: 400px;
 }
-.title {
-  margin-top: 10px;
-  color: #1a0dab;
-  cursor: pointer;
-}
-.popupWrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.info{
-    padding: 20px;
-}
-.info-wrap {
-    display: flex;
-}
-.cover-img {
-    width: 100px;
-    img {
-        width: 100%;
-    }
-}
-.content {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    padding: 0 10px;
-}
-.description {
-    padding-top: 20px;
-    padding-bottom: 10px;
-}
-.chapter-info {
-    display: flex;
-    align-items: center;
-    .chapter-len {
-        margin-right: auto;
-        white-space: nowrap;
-    }
-    .percent {
-        margin-left: 10px;
-    }
+.popup-wrap {
+    width: 400px;
 }

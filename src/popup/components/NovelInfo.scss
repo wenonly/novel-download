@@ -1,0 +1,37 @@
+.novel-wrap {
+    max-height: 500px;
+}
+.info {
+    padding: 20px;
+    padding-left: 0;
+}
+.info-wrap {
+    display: flex;
+}
+.cover-img {
+    width: 100px;
+    img {
+        width: 100%;
+    }
+}
+.content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 0 10px;
+}
+.description {
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+.chapter-info {
+    display: flex;
+    align-items: center;
+    .chapter-len {
+        margin-right: auto;
+        white-space: nowrap;
+    }
+    .percent {
+        margin-left: 10px;
+    }
+}

@@ -122,6 +122,7 @@ export class Downloader {
     jepub.init({
       title: this.novel.title,
       author: this.novel.author,
+      publisher: '小说下载器',
       description: this.novel.description // optional
     });
     jepub.uuid(this.mainUrl);
@@ -139,13 +140,6 @@ export class Downloader {
 
     link.click();
     this.setStatus(DownloadStatus.success);
-
-    // chrome.notifications.create(this.mainUrl, {
-    //   type: 'basic',
-    // //   iconUrl: this.novel.coverImgUrl,
-    //   title: this.novel.title,
-    //   message: '下载成功'
-    // });
   }
 }
 
@@ -156,10 +150,10 @@ export class DownloaderStack {
   push(url: string) {
     if (!this.stack[url]) {
       this.stack[url] = new Downloader(url, (novel: Novel, status: DownloadStatus, chapterLen: number) => {
-        this.callback && this.callback(novel, status, chapterLen);
         if (status === DownloadStatus.success) {
           delete this.stack[url];
         }
+        this.callback && this.callback(novel, status, chapterLen);
       });
     }
     return this.stack[url];
@@ -169,9 +163,11 @@ export class DownloaderStack {
     return this.stack[url];
   }
 
-  on(callback: (val: { [url: string]: Downloader }) => void) {
-    this.callback = () => {
-      callback(this.stack);
-    };
+  getAll() {
+    return this.stack;
+  }
+
+  onChange(callback: (val: { [url: string]: Downloader }) => void) {
+    this.callback = () => callback(this.stack);
   }
 }

@@ -42,12 +42,12 @@
   // 普通页面能够直接访问的插件资源列表，如果不设置是无法直接访问的
   // "web_accessible_resources": ["js/inject.js"],
   // Chrome40以前的插件配置页写法
-  "options_page": "options.html",
+//   "options_page": "options.html",
   // Chrome40以后的插件配置页写法，如果2个都写，新版Chrome只认后面这一个
-  "options_ui": {
-    "page": "options.html",
-    // 添加一些默认的样式，推荐使用
-    "chrome_style": true
-  },
+//   "options_ui": {
+//     "page": "options.html",
+//     // 添加一些默认的样式，推荐使用
+//     "chrome_style": true
+//   },
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
