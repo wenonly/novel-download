@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Result, Spin, Progress } from 'antd';
 import { throttle } from 'lodash-es';
+import { ReloadOutlined } from '@ant-design/icons';
 import { Downloader, DownloadStatus, HanlerCallback } from '@/background/downloader';
 import WebList from './WebList';
 import rules, { Novel } from '../../rules';
@@ -68,8 +69,7 @@ const NovelInfo: React.FunctionComponent = () => {
   const getDownloadStatus = (mainUrl: string) => {
     const downloader = bgApp.stack.get(mainUrl);
     if (downloader) {
-      setInfo(downloader.novel);
-      setDownloaderStatus(downloader.status);
+      handleChange(downloader.novel, downloader.status, downloader.chapterLen);
       downloader.onChange(handleChange);
       return true;
     }
@@ -125,6 +125,7 @@ const NovelInfo: React.FunctionComponent = () => {
                   status={downloaderStatus === DownloadStatus.error ? 'exception' : 'active'}
                 />
               )}
+              {(downloaderStatus === DownloadStatus.error) && <ReloadOutlined className='refresh-icon' onClick={startDownload} />}
               {downloaderStatus === DownloadStatus.generating && <span>生成中...</span>}
             </div>
           </div>

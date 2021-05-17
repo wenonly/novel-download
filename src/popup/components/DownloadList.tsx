@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Image, List, Progress } from 'antd';
 import './DownloadList.scss';
 import { Downloader, DownloadStatus } from '@/background/downloader';
+import { ReloadOutlined } from '@ant-design/icons';
 
 const bgWindow = chrome.extension.getBackgroundPage();
 const bgApp = (bgWindow as Window).app;
@@ -37,7 +38,13 @@ const DownloadList: React.FunctionComponent = () => {
   };
 
   const openPage = (url?: string) => {
-    chrome.tabs.create({url});
+    chrome.tabs.create({ url });
+  };
+
+  const restart = (mainUrl?: string) => {
+    if (mainUrl) {
+      bgApp.stack.push(mainUrl);
+    }
   };
 
   useEffect(() => {
@@ -66,10 +73,20 @@ const DownloadList: React.FunctionComponent = () => {
               description={
                 <div className='desc-wrap'>
                   <span className='desc'>{item.description}</span>
-                  {
-                      item.status === DownloadStatus.generating? (<div className='status'>生成中...</div>):
-                      <Progress className='percent' percent={item.progress} status={item.status === DownloadStatus.error?'exception': 'active'} />
-                  }
+                  <div className='action'>
+                    {item.status === DownloadStatus.generating ? (
+                      <div className='status'>生成中...</div>
+                    ) : (
+                      <Progress
+                        className='percent'
+                        percent={item.progress}
+                        status={item.status === DownloadStatus.error ? 'exception' : 'active'}
+                      />
+                    )}
+                    {item.status === DownloadStatus.error && (
+                      <ReloadOutlined className='refresh-icon' onClick={() => restart(item.mainUrl)} />
+                    )}
+                  </div>
                 </div>
               }
             />

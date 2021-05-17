@@ -25,6 +25,7 @@ export class Downloader {
     chapters: []
   };
   chapterLen = 0; // 已下载的章节数量
+  errorTag = false
 
   // 下面两个都是change时回调
   callback?: HanlerCallback; // 创建时设置回调
@@ -37,6 +38,13 @@ export class Downloader {
     this.curRule = curRule;
     if (!this.curRule) return;
     this.callback = callback;
+    this.start();
+  }
+
+  start() {
+    this.setChapterLen(0);
+    this.errorTag = false;
+    this.usingThread = 0;
     this.setStatus(DownloadStatus.downloading);
     Downloader.getPageInfo(this.mainUrl).then(novel => {
       this.novel = novel;
@@ -44,11 +52,32 @@ export class Downloader {
     });
   }
 
+
+  stop() {
+    this.errorTag = true;
+  }
+
+  chapterTime: any = null;
+  setChapterLen(num: number) {
+    // 这里进行报错，长时间进度没变化则说明下载失败
+    this.chapterLen = num;
+    clearTimeout(this.chapterTime);
+    if (this.chapterLen !== this.novel.chapters.length) {
+        this.chapterTime = setTimeout(() => {
+            this.setStatus(DownloadStatus.error);
+            this.stop();
+        }, 15000);
+    }
+  }
+
   private setStatus(val: DownloadStatus) {
     this.status = val;
-    // console.log('status:', val, 'chapterLen:' , this.chapterLen);
-    this.callback && this.callback(this.novel, val, this.chapterLen);
-    this.changeCallback && this.changeCallback(this.novel, val, this.chapterLen);
+    this.update();
+  }
+
+  private update() {
+    this.callback && this.callback(this.novel, this.status, this.chapterLen);
+    this.changeCallback && this.changeCallback(this.novel, this.status, this.chapterLen);
   }
 
   onChange(callback: HanlerCallback) {
@@ -93,6 +122,9 @@ export class Downloader {
 
   private async getChapter(chapter: Chapter) {
     if (!chapter.url) return;
+    if (this.errorTag) {
+        throw new Error('下载已停止');
+    }
     if (this.usingThread >= this.thread) {
       // 等待500毫秒
       await sleep(500);
@@ -105,9 +137,9 @@ export class Downloader {
       const res = await request.get(chapter.url as string);
       const html = res.data;
       Object.assign(chapter, this.curRule?.chapter(html) || {});
-      this.chapterLen += 1;
+      this.setChapterLen(this.chapterLen + 1);
       this.usingThread -= 1;
-      this.setStatus(DownloadStatus.downloading);
+      this.update();
     } catch {
       this.usingThread -= 1;
       await sleep(500);
@@ -148,14 +180,12 @@ export class DownloaderStack {
   callback?: HanlerCallback;
 
   push(url: string) {
-    if (!this.stack[url]) {
-      this.stack[url] = new Downloader(url, (novel: Novel, status: DownloadStatus, chapterLen: number) => {
-        if (status === DownloadStatus.success) {
-          delete this.stack[url];
-        }
-        this.callback && this.callback(novel, status, chapterLen);
-      });
-    }
+    this.stack[url] = new Downloader(url, (novel: Novel, status: DownloadStatus, chapterLen: number) => {
+      if (status === DownloadStatus.success) {
+        delete this.stack[url];
+      }
+      this.callback && this.callback(novel, status, chapterLen);
+    });
     return this.stack[url];
   }
 
