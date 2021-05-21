@@ -33,7 +33,7 @@ export interface Rule {
 
 const rules: {[url: string]: Rule} = {
     'www.biquwx.la': {
-        regExp: /.*www\.biquwx\.la\/\d+_\d+/,
+        regExp: /.*www\.biquwx\.la\/\d+_\d+\/?$/,
         ruleUrl: 'https://www.biquwx.la',
         ruleTitle: '笔趣阁',
         title: (html) => getDomFromHtml(html).querySelector('#info h1')?.textContent || '',
