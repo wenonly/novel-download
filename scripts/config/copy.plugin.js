@@ -34,7 +34,7 @@ class CopyFilePlugin {
     apply(compiler) {
         const outputPath = compiler.options.output.path;
         const context = compiler.options.context;
-        compiler.hooks.done.tapAsync('CopyFilePlugin', (compilation) => {
+        compiler.hooks.afterEmit.tapAsync('CopyFilePlugin', (compilation, callback) => {
             for (const item of this.opts) {
                 if (item.from && fs.existsSync(path.resolve(context, item.from))) {
                     copyFile(
@@ -44,6 +44,7 @@ class CopyFilePlugin {
                     )
                 }
             }
+            callback()
         })
     }
 }
