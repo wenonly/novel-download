@@ -3,10 +3,10 @@ const path = require("path");
 const { ROOTPATH, isDev } = require("../constants");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { htmlConfig } = require("../config");
 const Rules = require("./rules.config");
 const WebpackBar = require("webpackbar");
+const CopyFilePlugin = require("./copy.plugin");
 
 module.exports = {
   entry: {
@@ -57,17 +57,22 @@ module.exports = {
         }:{}),
       })
     }),
-    new CopyWebpackPlugin({
-      patterns: [
-          {
-              from: 'public',
-              globOptions: {
-                ignore: ["**/index.html"],
-              },
-          }
-      ],
-    }),
+    // new CopyWebpackPlugin({
+    //   patterns: [
+    //       {
+    //           from: 'public',
+    //           globOptions: {
+    //             ignore: ["**/index.html"],
+    //           },
+    //       }
+    //   ],
+    // }),
     // * 控制台显示编译/打包进度。
+    new CopyFilePlugin([{
+      from: 'public',
+      to: './',
+      excludes: ['index.html'],
+    }]),
     new WebpackBar({
       name: "build",
       color: "#fa8c16",

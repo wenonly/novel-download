@@ -89,7 +89,7 @@ export class Downloader {
     const hostname = getHostName(url);
     const curRule = rules[hostname];
     if (curRule) {
-      return request.get(url).then<Novel>(res => {
+      return request.get(url).then((res: { data: string; }) => {
         const html: string = res.data;
         return {
           title: curRule.title(html),
